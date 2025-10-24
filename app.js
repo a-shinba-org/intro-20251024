@@ -80,34 +80,48 @@
             const entryCard = document.createElement('div');
             entryCard.className = 'entry-card';
             
-            entryCard.innerHTML = `
-                <div class="entry-header">
-                    <h3 class="entry-title">${escapeHtml(entry.title)}</h3>
-                    <span class="entry-date">${formatDate(entry.date)}</span>
-                </div>
-                <p class="entry-content">${escapeHtml(entry.content)}</p>
-                <div class="entry-actions">
-                    <button class="btn-delete" data-id="${entry.id}">削除</button>
-                </div>
-            `;
+            // Create entry header
+            const entryHeader = document.createElement('div');
+            entryHeader.className = 'entry-header';
             
-            entriesList.appendChild(entryCard);
-        });
-
-        // Add event listeners to delete buttons
-        document.querySelectorAll('.btn-delete').forEach(button => {
-            button.addEventListener('click', function() {
+            const entryTitle = document.createElement('h3');
+            entryTitle.className = 'entry-title';
+            entryTitle.textContent = entry.title;
+            
+            const entryDate = document.createElement('span');
+            entryDate.className = 'entry-date';
+            entryDate.textContent = formatDate(entry.date);
+            
+            entryHeader.appendChild(entryTitle);
+            entryHeader.appendChild(entryDate);
+            
+            // Create entry content
+            const entryContent = document.createElement('p');
+            entryContent.className = 'entry-content';
+            entryContent.textContent = entry.content;
+            
+            // Create entry actions
+            const entryActions = document.createElement('div');
+            entryActions.className = 'entry-actions';
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn-delete';
+            deleteButton.textContent = '削除';
+            deleteButton.setAttribute('data-id', entry.id);
+            deleteButton.addEventListener('click', function() {
                 const id = parseInt(this.getAttribute('data-id'));
                 deleteEntry(id);
             });
+            
+            entryActions.appendChild(deleteButton);
+            
+            // Assemble entry card
+            entryCard.appendChild(entryHeader);
+            entryCard.appendChild(entryContent);
+            entryCard.appendChild(entryActions);
+            
+            entriesList.appendChild(entryCard);
         });
-    }
-
-    // Escape HTML to prevent XSS
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
     }
 
     // Handle form submission
